@@ -20,11 +20,13 @@ import lombok.RequiredArgsConstructor;
 public class SlideshowRepository {
 
     private final JpaSlideshowRepository jpaSlideshowRepository;
+    private final ImageRepository imageRepository;
     private final SlideshowMapper slideshowMapper;
     private final ImageMapper imageMapper;
 
     public Slideshow createSlideshow(final List<Image> images) {
         List<ImageDb> imagesRelatedToSlideshow = images.stream()
+            .map(image -> imageRepository.getImageByUrl(image.getUrl()).orElseGet(() -> imageRepository.createImage(image)))
             .map(imageMapper::toImageDb)
             .toList();
 

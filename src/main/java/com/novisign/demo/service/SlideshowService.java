@@ -11,6 +11,9 @@ import com.novisign.demo.repository.SlideshowRepository;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Dev notes: there is should be proxied validator with specific rules and custom exceptions, but I didn't have enough time to finish all steps in time
+ */
 @Service
 @RequiredArgsConstructor
 public class SlideshowService {
