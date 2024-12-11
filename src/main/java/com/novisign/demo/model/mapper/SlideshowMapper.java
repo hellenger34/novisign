@@ -9,7 +9,8 @@ import com.novisign.demo.model.entity.SlideshowDb;
 
 @Mapper(
     componentModel = MappingConstants.ComponentModel.SPRING,
-    unmappedTargetPolicy = ReportingPolicy.IGNORE
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    uses = ImageMapper.class
 )
 public interface SlideshowMapper {
 
