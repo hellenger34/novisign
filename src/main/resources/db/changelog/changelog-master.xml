@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <include file="/db/changelog/001_create_image_table/001.01_create_image_table.xml" relativeToChangelogFile="false"/>
+  <include file="/db/changelog/002_create_slideshow_table/002.01_create_slideshow_table.xml" relativeToChangelogFile="false"/>
+
+</databaseChangeLog>
