@@ -30,7 +30,7 @@ public class ImageController {
     private final ImageService imageService;
 
     //    @PostMapping("/")
-    @PostMapping("/addImage")
+    @PostMapping(value = "/addImage", produces = "application/json")
     public ResponseEntity<Image> addImage(@RequestBody final Image image) {
         Image createdImage = imageService.addImage(image);
 

@@ -1,4 +1,7 @@
-package com.novisign.demo.api;
+package com.novisign.demo.api.event;
+
+import com.novisign.demo.api.enums.EntityType;
+import com.novisign.demo.api.enums.EventAction;
 
 import lombok.Getter;
 

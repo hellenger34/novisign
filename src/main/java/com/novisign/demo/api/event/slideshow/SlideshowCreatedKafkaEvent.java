@@ -1,8 +1,8 @@
 package com.novisign.demo.api.event.slideshow;
 
-import com.novisign.demo.api.AbstractKafkaEvent;
-import com.novisign.demo.api.EntityType;
-import com.novisign.demo.api.EventAction;
+import com.novisign.demo.api.event.AbstractKafkaEvent;
+import com.novisign.demo.api.enums.EntityType;
+import com.novisign.demo.api.enums.EventAction;
 import com.novisign.demo.model.dto.Slideshow;
 
 import lombok.Getter;

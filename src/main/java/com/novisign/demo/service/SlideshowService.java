@@ -6,14 +6,17 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.novisign.demo.event.producer.SlideshowKafkaEventProducer;
+import com.novisign.demo.exception.ExceptionDetail;
+import com.novisign.demo.exception.ValidationException;
 import com.novisign.demo.model.dto.Image;
 import com.novisign.demo.model.dto.Slideshow;
 import com.novisign.demo.repository.SlideshowRepository;
+import com.novisign.demo.service.validator.ImageValidator;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 /**
- *  * - there is should be proxied validator with specific rules and custom exceptions, but I didn't have enough time to finish all steps in time
  *  * - also there can be another wrapper for service to separate business logic with sending event operations
  */
 @Service
@@ -23,7 +26,17 @@ public class SlideshowService {
     private final SlideshowRepository slideshowRepository;
     private final SlideshowKafkaEventProducer producer;
 
+    @SneakyThrows
     public Slideshow createSlideshow(final List<Image> images) {
+        /*
+         * Yep, it should be optimized by creation of more flexible Validator
+         */
+        for (Image image : images) {
+            new ImageValidator()
+                .withEntity(image)
+                .validate();
+        }
+
         Slideshow createdSlideshow = slideshowRepository.createSlideshow(images);
         producer.sendSlideshowCreatedEvent(createdSlideshow);
         return createdSlideshow;
@@ -38,14 +51,15 @@ public class SlideshowService {
         return false;
     }
 
-    public List<Image> getSlideshowOrder(final Long id) throws Exception {
+    @SneakyThrows
+    public List<Image> getSlideshowOrder(final Long id) {
         final Slideshow slideshow = slideshowRepository.getSlideshowById(id)
-            .orElseThrow(() -> new Exception(String.format("Slideshow not found by id: %s", id)));
+            .orElseThrow(() -> new ValidationException(ExceptionDetail.SLIDESHOW_NOT_FOUND, id));
 
         List<Image> images = slideshow.getImages();
 
         if (images.isEmpty()) {
-            throw new Exception(String.format("There is no images related to slideshow with id: %s", id));
+            throw new ValidationException(ExceptionDetail.THERE_ID_NOT_IMAGES_RELATED_TO_SLIDESHOW, id);
         }
 
         images.sort(Comparator.comparingInt(Image::getDurationSeconds));

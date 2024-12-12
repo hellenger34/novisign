@@ -1,4 +1,4 @@
-package com.novisign.demo.api;
+package com.novisign.demo.api.enums;
 
 public enum EntityType {
     IMAGE,

@@ -7,12 +7,13 @@ import org.springframework.stereotype.Service;
 import com.novisign.demo.event.producer.ImageKafkaEventProducer;
 import com.novisign.demo.model.dto.Image;
 import com.novisign.demo.repository.ImageRepository;
+import com.novisign.demo.service.validator.ImageValidator;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 /**
  * Dev notes:
- * - there is should be proxied validator with specific rules and custom exceptions, but I didn't have enough time to finish all steps in time
  * - also there can be another wrapper for service to separate business logic with sending event operations
  */
 @Service
@@ -22,7 +23,12 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final ImageKafkaEventProducer imageKafkaEventProducer;
 
+    @SneakyThrows
     public Image addImage(Image image) {
+        new ImageValidator()
+            .withEntity(image)
+            .validate();
+
         Image createdImage = imageRepository.createImage(image);
         imageKafkaEventProducer.sendImageCreatedEvent(createdImage);
         return createdImage;

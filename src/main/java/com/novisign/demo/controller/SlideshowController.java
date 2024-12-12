@@ -59,7 +59,7 @@ public class SlideshowController {
 
     //    @GetMapping("/{id}/order")
     @GetMapping("/slideshow/{id}/slideshowOrder")
-    public ResponseEntity<List<Image>> slideshowOrder(@PathVariable Long id) throws Exception {
+    public ResponseEntity<List<Image>> slideshowOrder(@PathVariable Long id) {
         List<Image> sortedImages = slideshowService.getSlideshowOrder(id);
 
         return ResponseEntity
