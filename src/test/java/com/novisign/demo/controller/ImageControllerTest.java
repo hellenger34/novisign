@@ -68,21 +68,30 @@ public class ImageControllerTest {
         verifyNoMoreInteractions(mockImageService);
     }
 
-    @ParameterizedTest
-    @ValueSource(booleans = {true, false})
-    public void deleteImageByIdTest(boolean isDeleted) {
+    @Test
+    public void deleteImageByIdTest_Success() {
         //GIVEN
-        when(mockImageService.deleteImage(TEST_ID_1)).thenReturn(isDeleted);
+        when(mockImageService.deleteImage(TEST_ID_1)).thenReturn(true);
 
         //WHEN
         ResponseEntity<Void> actualResponse = unit.deleteImageById(TEST_ID_1);
 
         //THEN
-        if (isDeleted){
-            assertEquals(actualResponse.getStatusCode(), HttpStatus.OK);
-        } else {
-            assertEquals(actualResponse.getStatusCode(), HttpStatus.NO_CONTENT);
-        }
+        assertEquals(actualResponse.getStatusCode(), HttpStatus.OK);
+
+        verify(mockImageService).deleteImage(TEST_ID_1);
+    }
+
+    @Test
+    public void deleteImageByIdTest_NotFound() {
+        //GIVEN
+        when(mockImageService.deleteImage(TEST_ID_1)).thenReturn(false);
+
+        //WHEN
+        ResponseEntity<Void> actualResponse = unit.deleteImageById(TEST_ID_1);
+
+        //THEN
+        assertEquals(actualResponse.getStatusCode(), HttpStatus.NO_CONTENT);
 
         verify(mockImageService).deleteImage(TEST_ID_1);
     }

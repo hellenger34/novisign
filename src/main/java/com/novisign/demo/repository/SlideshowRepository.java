@@ -30,8 +30,9 @@ public class SlideshowRepository {
             .map(imageMapper::toImageDb)
             .toList();
 
-        final SlideshowDb slideshowDb = new SlideshowDb();
-        slideshowDb.setImages(imagesRelatedToSlideshow);
+        final SlideshowDb slideshowDb = SlideshowDb.builder()
+            .images(imagesRelatedToSlideshow)
+            .build();
 
         return slideshowMapper.toSlideshow(jpaSlideshowRepository.save(slideshowDb));
     }
