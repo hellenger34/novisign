@@ -1,6 +1,7 @@
 package com.novisign.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,10 @@ public class ImageService {
 
     public List<Image> searchImages(final String keyword, final Integer duration) {
         return imageRepository.searchImages(keyword, duration);
+    }
+
+    public Optional<Image> getImageByUrl(String url) {
+        return imageRepository.getImageByUrl(url);
     }
 
 }

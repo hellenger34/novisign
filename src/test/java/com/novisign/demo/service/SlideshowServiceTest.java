@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -41,12 +42,10 @@ public class SlideshowServiceTest {
 
     @Mock
     private SlideshowRepository mockSlideshowRepository;
-
     @Mock
     private SlideshowKafkaEventProducer mockSlideshowKafkaEventProducer;
-
     @Mock
-    private ImageValidator mockImageValidator;
+    private ImageService mockImageService;
 
     @InjectMocks
     private SlideshowService unit;
@@ -70,6 +69,9 @@ public class SlideshowServiceTest {
             .images(images)
             .build();
 
+        when(mockImageService.getImageByUrl(TEST_URL_1)).thenReturn(Optional.of(image1));
+        when(mockImageService.getImageByUrl(TEST_URL_2)).thenReturn(Optional.empty());
+        when(mockImageService.addImage(image2)).thenReturn(image2);
         when(mockSlideshowRepository.createSlideshow(images)).thenReturn(createdSlideshow);
 
         //WHEN
@@ -77,24 +79,11 @@ public class SlideshowServiceTest {
 
         //THEN
         assertEquals(createdSlideshow, actualResult);
+        verify(mockImageService).getImageByUrl(TEST_URL_1);
+        verify(mockImageService).addImage(image2);
         verify(mockSlideshowRepository).createSlideshow(images);
         verify(mockSlideshowKafkaEventProducer).sendSlideshowCreatedEvent(createdSlideshow);
         verifyNoMoreInteractions(mockSlideshowRepository, mockSlideshowKafkaEventProducer);
-    }
-
-    @Test
-    public void createSlideshowTest_InvalidUrl() {
-        //GIVEN
-        Image invalidImage = Image.builder()
-            .id(TEST_ID_1)
-            .url("qwe")
-            .durationSeconds(TEST_DURATION_5)
-            .build();
-        List<Image> images = List.of(invalidImage);
-
-        //WHEN & THEN
-        assertThrows(ValidationException.class, () -> unit.createSlideshow(images));
-        verifyNoInteractions(mockSlideshowRepository, mockSlideshowKafkaEventProducer);
     }
 
     @Test

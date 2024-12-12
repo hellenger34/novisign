@@ -38,9 +38,6 @@ public class SlideshowRepositoryTest {
     private JpaSlideshowRepository mockJpaSlideshowRepository;
 
     @Mock
-    private ImageRepository mockImageRepository;
-
-    @Mock
     private SlideshowMapper mockSlideshowMapper;
 
     @Mock
@@ -86,8 +83,6 @@ public class SlideshowRepositoryTest {
             .images(List.of(image1, image2))
             .build();
 
-        when(mockImageRepository.getImageByUrl(image1.getUrl())).thenReturn(Optional.of(image1));
-        when(mockImageRepository.getImageByUrl(image2.getUrl())).thenReturn(Optional.of(image2));
         when(mockImageMapper.toImageDb(image1)).thenReturn(imageDb1);
         when(mockImageMapper.toImageDb(image2)).thenReturn(imageDb2);
         when(mockSlideshowMapper.toSlideshow(savedSlideshowDb)).thenReturn(expectedSlideshow);
@@ -98,13 +93,11 @@ public class SlideshowRepositoryTest {
 
         //THEN
         assertEquals(expectedSlideshow, actualResult);
-        verify(mockImageRepository).getImageByUrl(image1.getUrl());
-        verify(mockImageRepository).getImageByUrl(image2.getUrl());
         verify(mockImageMapper).toImageDb(image1);
         verify(mockImageMapper).toImageDb(image2);
         verify(mockJpaSlideshowRepository).save(slideshowDb);
         verify(mockSlideshowMapper).toSlideshow(savedSlideshowDb);
-        verifyNoMoreInteractions(mockImageRepository, mockImageMapper, mockJpaSlideshowRepository, mockSlideshowMapper);
+        verifyNoMoreInteractions(mockImageMapper, mockJpaSlideshowRepository, mockSlideshowMapper);
     }
 
     @Test
